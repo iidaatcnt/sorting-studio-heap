@@ -174,26 +174,26 @@ export default function HeapSortStudio() {
   const step = steps[currentStep] || { array: [], indices: [], type: 'init', description: '' };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 font-sans selection:bg-amber-500/30">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-sans selection:bg-indigo-500/30">
       {/* Header */}
-      <header className="border-b border-white/5 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-slate-200 bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center shadow-lg shadow-amber-500/20">
-              <GitBranch className="text-slate-900 w-5 h-5" />
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
+              <GitBranch className="text-white w-5 h-5" />
             </div>
-            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-amber-500">Heap_Sort_Studio</h1>
+            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-indigo-600">Heap_Sort_Studio</h1>
           </div>
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-500 font-black tracking-widest">
+            <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-400 font-black tracking-widest">
               <div className="flex items-center gap-2">
-                <div className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-amber-400 animate-pulse' : 'bg-slate-700'}`} />
-                {isPlaying ? 'Rebuilding' : 'Waiting'}
+                <div className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-emerald-600 animate-pulse' : 'bg-slate-300'}`} />
+                {isPlaying ? '構築中' : '停止中'}
               </div>
               <span className="opacity-20">|</span>
               <span>Step: {currentStep} / {steps.length - 1}</span>
             </div>
-            <a href="https://github.com/iidaatcnt/sorting-studio-heap" target="_blank" rel="noreferrer" className="text-slate-600 hover:text-white transition-colors">
+            <a href="https://github.com/iidaatcnt/sorting-studio-heap" target="_blank" rel="noreferrer" className="text-slate-400 hover:text-slate-900 transition-colors">
               <Github size={20} />
             </a>
           </div>
@@ -204,19 +204,18 @@ export default function HeapSortStudio() {
         {/* Left: Visualization */}
         <div className="lg:col-span-8 flex flex-col gap-8">
 
-          <div className="relative aspect-video lg:aspect-[4/3] bg-[#031121] rounded-[3rem] border border-white/5 p-12 overflow-hidden shadow-2xl">
-            <div className="absolute top-8 left-12 flex items-center gap-3 mono text-[9px] text-slate-500 uppercase font-black tracking-[0.2em] z-10">
-              <ArrowUp size={14} className="text-amber-500" />
-              Binary Tree Representation // Max Heap
+          <div className="relative aspect-video lg:aspect-[4/3] bg-white rounded-[3rem] border border-slate-200 p-12 overflow-hidden shadow-xl">
+            <div className="absolute top-8 left-12 flex items-center gap-3 mono text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] z-10">
+              <ArrowUp size={14} className="text-indigo-600" />
+              ヒープ構造（二分木）の可視化
             </div>
 
             {/* SVG Lines for Tree */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
+            <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.1]">
               {step.array.map((_, i) => {
                 const left = 2 * i + 1;
                 const right = 2 * i + 2;
-                const start = getTreePos(i, 800, 600); // Dummy dimensions, will be scaled
-
+                // Since this is in %, we use 100 as the reference
                 return (
                   <React.Fragment key={i}>
                     {left < ARRAY_SIZE && (
@@ -225,7 +224,7 @@ export default function HeapSortStudio() {
                         y1={`${(getTreePos(i, 100, 100).y)}%`}
                         x2={`${(getTreePos(left, 100, 100).x)}%`}
                         y2={`${(getTreePos(left, 100, 100).y)}%`}
-                        stroke="white" strokeWidth="1"
+                        stroke="black" strokeWidth="1"
                       />
                     )}
                     {right < ARRAY_SIZE && (
@@ -234,7 +233,7 @@ export default function HeapSortStudio() {
                         y1={`${(getTreePos(i, 100, 100).y)}%`}
                         x2={`${(getTreePos(right, 100, 100).x)}%`}
                         y2={`${(getTreePos(right, 100, 100).y)}%`}
-                        stroke="white" strokeWidth="1"
+                        stroke="black" strokeWidth="1"
                       />
                     )}
                   </React.Fragment>
@@ -246,15 +245,11 @@ export default function HeapSortStudio() {
               {step.array.map((val, idx) => {
                 const pos = getTreePos(idx, 100, 100);
                 const isSelected = step.indices.includes(idx);
-                let colorClass = "bg-slate-800 border-white/10";
+                let colorClass = "bg-slate-50 border-slate-200";
 
                 if (isSelected) {
-                  if (step.type === 'heapify') colorClass = "bg-cyan-500 shadow-[0_0_30px_rgba(6,182,212,0.5)] border-cyan-400";
-                  if (step.type === 'swap') colorClass = "bg-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.5)] border-amber-400 z-20";
-                }
-
-                if (step.type === 'sorted' && idx >= step.array.length - (currentStep > 0 ? 1 : 0)) {
-                  // Logic to show confirmed elements might need more state, just a placeholder
+                  if (step.type === 'heapify') colorClass = "bg-indigo-400 shadow-[0_0_30px_rgba(129,140,248,0.5)] border-indigo-300 text-white";
+                  if (step.type === 'swap') colorClass = "bg-rose-500 shadow-[0_0_30px_rgba(244,63,94,0.5)] border-rose-400 z-20 text-white";
                 }
 
                 return (
@@ -267,7 +262,7 @@ export default function HeapSortStudio() {
                       top: `${pos.y}%`,
                       transform: 'translate(-50%, -50%)'
                     }}
-                    className={`absolute w-14 h-14 rounded-2xl flex items-center justify-center border-2 mono font-black text-lg transition-all duration-300 ${colorClass}`}
+                    className={`absolute w-14 h-14 rounded-2xl flex items-center justify-center border-2 text-sm font-black transition-all duration-300 ${colorClass}`}
                   >
                     {val}
                   </motion.div>
@@ -276,41 +271,41 @@ export default function HeapSortStudio() {
             </AnimatePresence>
 
             {/* Array representation at bottom */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-1 p-2 bg-black/40 rounded-xl border border-white/5 backdrop-blur-sm">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-1 p-2 bg-slate-50 rounded-xl border border-slate-200 backdrop-blur-sm shadow-inner">
               {step.array.map((val, idx) => (
-                <div key={idx} className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] mono font-bold border ${step.indices.includes(idx) ? 'bg-amber-500/20 border-amber-500 text-amber-500' : 'bg-white/5 border-white/10 text-slate-500'}`}>
+                <div key={idx} className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold border ${step.indices.includes(idx) ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-100 text-slate-400'}`}>
                   {val}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="px-10 py-8 bg-slate-900/50 rounded-[2.5rem] border border-white/10 flex flex-col gap-8 shadow-inner">
+          <div className="px-10 py-8 bg-white rounded-[2.5rem] border border-slate-200 flex flex-col gap-8 shadow-lg">
             <div className="flex flex-col md:flex-row items-center gap-10">
               <div className="flex items-center gap-2">
-                <button onClick={stepBackward} className="p-4 bg-slate-800 rounded-2xl hover:bg-slate-700 transition-colors text-slate-400"><StepBack size={20} /></button>
+                <button onClick={stepBackward} className="p-4 bg-slate-100 text-slate-400 rounded-2xl hover:bg-slate-200 transition-colors"><StepBack size={20} /></button>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-20 h-20 bg-amber-600 text-white rounded-[2rem] flex items-center justify-center hover:bg-amber-400 transition-all active:scale-95 shadow-xl shadow-amber-500/20"
+                  className="w-20 h-20 bg-indigo-600 text-white rounded-[2rem] flex items-center justify-center hover:bg-indigo-500 transition-all active:scale-95 shadow-xl shadow-indigo-600/20"
                 >
                   {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
                 </button>
-                <button onClick={stepForward} className="p-4 bg-slate-800 rounded-2xl hover:bg-slate-700 transition-colors text-slate-400"><StepForward size={20} /></button>
-                <button onClick={reset} className="p-4 bg-slate-800 rounded-2xl hover:bg-slate-700 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
+                <button onClick={stepForward} className="p-4 bg-slate-100 text-slate-400 rounded-2xl hover:bg-slate-200 transition-colors"><StepForward size={20} /></button>
+                <button onClick={reset} className="p-4 bg-slate-100 text-slate-400 rounded-2xl hover:bg-slate-200 transition-colors text-slate-400 ml-4"><RotateCcw size={20} /></button>
               </div>
 
               <div className="flex-1 w-full">
-                <div className="flex items-center justify-between mono text-[10px] text-slate-500 uppercase font-black tracking-widest mb-3">
-                  <span>Tick Latency</span>
-                  <span className="text-amber-500">{speed}ms</span>
+                <div className="flex items-center justify-between mono text-[10px] text-slate-400 uppercase font-black tracking-widest mb-3 font-bold">
+                  <span>再生スピード</span>
+                  <span className="text-indigo-600">{speed}ms</span>
                 </div>
-                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-slate-800 h-1.5 rounded-full accent-amber-500 cursor-pointer" />
+                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-slate-100 h-1.5 rounded-full accent-indigo-600 cursor-pointer" />
               </div>
             </div>
 
-            <div className="p-6 bg-amber-500/5 rounded-2xl border border-amber-500/20 flex gap-4">
-              <Info size={18} className="text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-sm text-slate-300 leading-relaxed font-medium italic">
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4">
+              <Info size={18} className="text-slate-400 shrink-0 mt-0.5" />
+              <p className="text-sm text-slate-600 leading-relaxed font-medium">
                 {step.description}
               </p>
             </div>
@@ -319,43 +314,43 @@ export default function HeapSortStudio() {
 
         {/* Right: Code & Theory */}
         <div className="lg:col-span-4 flex flex-col gap-8">
-          <div className="p-8 bg-zinc-900 border border-white/5 rounded-[2.5rem] shadow-2xl">
+          <div className="p-8 bg-white border border-slate-200 rounded-[2.5rem] shadow-lg">
             <div className="flex items-center gap-3 mb-8">
               <Lightbulb className="text-amber-500 w-5 h-5" />
-              <h2 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400">Logic_Brief</h2>
+              <h2 className="font-black text-xs uppercase tracking-[0.2em] text-slate-400">学習ガイド</h2>
             </div>
-            <div className="p-6 bg-black/40 rounded-2xl border border-white/5 mb-8">
-              <h3 className="text-amber-500 font-black mb-3 text-sm">Heap Sort</h3>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 mb-8">
+              <h3 className="text-indigo-600 font-black mb-3 text-sm">Heap Sort</h3>
+              <p className="text-[11px] text-slate-500 leading-relaxed font-medium">
                 配列を完全二分木（ヒープ）として扱い、まず全ての親が子より大きくなるよう整えます（最大ヒープ）。その後、根の最大値を取り出し末尾と入れ替えることを繰り返します。
               </p>
             </div>
             <div className="grid grid-cols-2 gap-3 mono text-[9px] font-black uppercase tracking-tighter">
-              <div className="p-4 bg-white/5 rounded-xl text-center border border-white/5 hover:border-amber-500/20 transition-colors">
-                <span className="text-slate-600 block mb-1">Complexity</span>
-                <span className="text-white">O(N log N)</span>
+              <div className="p-4 bg-slate-50 rounded-xl text-center border border-slate-100 transition-colors">
+                <span className="text-slate-400 block mb-1">Complexity</span>
+                <span className="text-indigo-600 font-black">O(N log N)</span>
               </div>
-              <div className="p-4 bg-white/5 rounded-xl text-center border border-white/5 hover:border-amber-500/20 transition-colors">
-                <span className="text-slate-600 block mb-1">Type</span>
-                <span className="text-white">Tree-Based</span>
+              <div className="p-4 bg-slate-50 rounded-xl text-center border border-slate-100 transition-colors">
+                <span className="text-slate-400 block mb-1">Type</span>
+                <span className="text-slate-700 font-black">Tree-Based</span>
               </div>
             </div>
           </div>
 
-          <div className="p-8 bg-black border border-white/5 rounded-[2.5rem] flex-1 flex flex-col min-h-[450px]">
+          <div className="p-8 bg-[#0f172a] border border-slate-800 rounded-[2.5rem] flex-1 flex flex-col min-h-[450px]">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <Code2 className="text-slate-500 w-5 h-5" />
-                <h2 className="font-black text-[10px] uppercase tracking-widest text-slate-600">Kernel_Exec</h2>
+                <Code2 className="text-slate-400 w-5 h-5" />
+                <h2 className="font-black text-[10px] uppercase tracking-widest text-slate-500">Python 実装例</h2>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-500/50 shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
             </div>
 
-            <div className="flex-1 bg-zinc-950/30 p-8 rounded-2xl mono text-[10px] leading-loose overflow-auto border border-white/5 whitespace-nowrap scrollbar-hide">
+            <div className="flex-1 bg-black/20 p-8 rounded-2xl mono text-[10px] leading-loose overflow-auto border border-slate-800 scrollbar-hide text-slate-300">
               {CODE_PYTHON.map((line, i) => (
                 <div
                   key={i}
-                  className={`flex gap-6 transition-all duration-300 ${step.codeLine === i ? 'text-amber-400 bg-amber-400/10 -mx-8 px-8 border-l-2 border-amber-400 font-bold' : 'text-slate-800'}`}
+                  className={`flex gap-6 transition-all duration-300 ${step.codeLine === i ? 'text-indigo-400 bg-indigo-500/10 -mx-8 px-8 border-l-2 border-indigo-400 font-bold' : 'text-slate-800'}`}
                 >
                   <span className="text-slate-900 tabular-nums w-4 select-none opacity-50">{i + 1}</span>
                   <pre className="whitespace-pre">{line}</pre>
@@ -370,10 +365,10 @@ export default function HeapSortStudio() {
         </div>
       </main>
 
-      <footer className="mt-20 border-t border-white/5 py-16 text-center">
+      <footer className="mt-20 border-t border-slate-200 py-16 text-center">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
-          <GitBranch className="text-slate-900 w-8 h-8 opacity-20" />
-          <p className="text-[8px] mono text-slate-700 uppercase tracking-[0.8em]">Interactive_Learning_Series // Informatics_I</p>
+          <GitBranch className="text-slate-200 w-8 h-8 opacity-20" />
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Fundamental Wisdom for the AI Era // Algorithm Literacy // しろいプログラミング教室</p>
         </div>
       </footer>
     </div>
