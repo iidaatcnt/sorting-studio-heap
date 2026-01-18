@@ -13,7 +13,7 @@ import {
   Code2,
   Zap,
   Lightbulb,
-  GitBranch,
+  Hexagon,
   ArrowUp
 } from 'lucide-react';
 
@@ -179,10 +179,10 @@ export default function HeapSortStudio() {
       <header className="border-b border-slate-200 bg-white/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-indigo-600/20">
-              <GitBranch className="text-white w-5 h-5" />
+            <div className="w-8 h-8 bg-amber-600 rounded-lg flex items-center justify-center shadow-lg shadow-amber-600/20">
+              <Hexagon className="text-white w-5 h-5" />
             </div>
-            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-indigo-600">Heap_Sort_Studio</h1>
+            <h1 className="font-black italic tracking-tighter text-xl uppercase tracking-widest text-amber-600">ヒープソート (Heap Sort)</h1>
           </div>
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-4 text-[10px] mono uppercase text-slate-400 font-black tracking-widest">
@@ -206,7 +206,7 @@ export default function HeapSortStudio() {
 
           <div className="relative aspect-video lg:aspect-[4/3] bg-white rounded-[3rem] border border-slate-200 p-12 overflow-hidden shadow-xl">
             <div className="absolute top-8 left-12 flex items-center gap-3 mono text-[9px] text-slate-400 uppercase font-black tracking-[0.2em] z-10">
-              <ArrowUp size={14} className="text-indigo-600" />
+              <ArrowUp size={14} className="text-amber-600" />
               ヒープ構造（二分木）の可視化
             </div>
 
@@ -248,8 +248,9 @@ export default function HeapSortStudio() {
                 let colorClass = "bg-slate-50 border-slate-200";
 
                 if (isSelected) {
+                  colorClass = "bg-amber-100 border-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.2)]";
                   if (step.type === 'heapify') colorClass = "bg-indigo-400 shadow-[0_0_30px_rgba(129,140,248,0.5)] border-indigo-300 text-white";
-                  if (step.type === 'swap') colorClass = "bg-rose-500 shadow-[0_0_30px_rgba(244,63,94,0.5)] border-rose-400 z-20 text-white";
+                  if (step.type === 'swap') colorClass = "bg-amber-500 border-amber-600 shadow-[0_0_25px_rgba(245,158,11,0.5)] z-20 text-white";
                 }
 
                 return (
@@ -286,7 +287,7 @@ export default function HeapSortStudio() {
                 <button onClick={stepBackward} className="p-4 bg-slate-100 text-slate-400 rounded-2xl hover:bg-slate-200 transition-colors"><StepBack size={20} /></button>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-20 h-20 bg-indigo-600 text-white rounded-[2rem] flex items-center justify-center hover:bg-indigo-500 transition-all active:scale-95 shadow-xl shadow-indigo-600/20"
+                  className="w-20 h-20 bg-amber-600 text-white rounded-[2rem] flex items-center justify-center hover:bg-amber-500 transition-all active:scale-95 shadow-xl shadow-amber-600/20"
                 >
                   {isPlaying ? <Pause fill="currentColor" size={24} /> : <Play fill="currentColor" size={24} className="ml-1" />}
                 </button>
@@ -297,9 +298,9 @@ export default function HeapSortStudio() {
               <div className="flex-1 w-full">
                 <div className="flex items-center justify-between mono text-[10px] text-slate-400 uppercase font-black tracking-widest mb-3 font-bold">
                   <span>再生スピード</span>
-                  <span className="text-indigo-600">{speed}ms</span>
+                  <span className="text-amber-600">{Math.round((speed / 980) * 100)} unit</span>
                 </div>
-                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-slate-100 h-1.5 rounded-full accent-indigo-600 cursor-pointer" />
+                <input type="range" min="100" max="980" value={speed} onChange={(e) => setSpeed(parseInt(e.target.value))} className="w-full appearance-none bg-slate-100 h-1.5 rounded-full accent-amber-600 cursor-pointer" />
               </div>
             </div>
 
@@ -367,7 +368,7 @@ export default function HeapSortStudio() {
 
       <footer className="mt-20 border-t border-slate-200 py-16 text-center">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
-          <GitBranch className="text-slate-200 w-8 h-8 opacity-20" />
+          <Hexagon className="text-slate-200 w-8 h-8 opacity-20" />
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Fundamental Wisdom for the AI Era // Algorithm Literacy // しろいプログラミング教室</p>
         </div>
       </footer>
